@@ -1,31 +1,38 @@
-document.addEventListener("DOMContentLoaded", function () {
+const inpuBox = document.getElementById("taskInput");
+const listContainer = document.getElementById("list-container");
 
-    const navLinks = document.querySelectorAll('nav a[href^="#"]');
-    
-    navLinks.forEach(link => {
-        link.addEventListener("click", function (e) {
-            e.preventDefault();
+function addTask(){
+    if(inpuBox.value == ""){
+        alert("You Write Something")
+    }
+    else{
+        let li = document.createElement('li');
+        li.innerHTML = inpuBox.value;
+        listContainer.appendChild(li)
+        let span = document.createElement('span');
+        span.innerHTML = "\u00d7";
+        li.appendChild(span)
+    }
+    inpuBox.value = "";
+    saveData()
+}
 
-            const targetId = this.getAttribute("href").substring(1);
-            const targetElement = document.getElementById(targetId);
+listContainer.addEventListener('click', function (event) {
+    if(event.target.tagName === "LI" ){
+        event.target.classList.toggle("checked")
+        saveData()
+    }
+    else if(event.target.tagName === "SPAN"){
+        event.target.parentElement.remove()
+        saveData()
+    }
+},false)
 
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 50, 
-                });
-            }
-        });
-    });
+function saveData(){
+    localStorage.setItem("data",listContainer.innerHTML);
+}
 
-
-    const contactForm = document.querySelector('.contact form');
-
-    contactForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-       
-
-        alert('Form submitted!'); 
-        this.reset();
-    });
-});
+function showTask(){
+    listContainer.innerHTML = localStorage.getItem("data");
+}
+showTask();
